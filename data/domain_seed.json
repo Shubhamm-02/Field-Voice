@@ -1,0 +1,96 @@
+{
+  "equipment": [
+    {
+      "code": "PMP-204B",
+      "name": "Boiler feed pump 204B",
+      "location": "North Plant Bay 4",
+      "specs": {
+        "max_pressure_bar": 18,
+        "rated_flow_lpm": 420,
+        "bearing_temp_limit_c": 82,
+        "seal_kit": "SK-PMP-204"
+      },
+      "vocabulary": ["bearing temperature", "seal kit", "F12", "coolant flush"]
+    },
+    {
+      "code": "CMP-118A",
+      "name": "Air compressor 118A",
+      "location": "Utility Room 2",
+      "specs": {
+        "max_pressure_bar": 10,
+        "oil_grade": "ISO VG 46",
+        "filter_part": "AF-118"
+      },
+      "vocabulary": ["intake filter", "pressure drop", "oil carryover", "F07"]
+    },
+    {
+      "code": "VLV-77C",
+      "name": "Steam isolation valve 77C",
+      "location": "Line 7 Station C",
+      "specs": {
+        "valve_type": "gate",
+        "diameter_mm": 150,
+        "torque_nm": 260
+      },
+      "vocabulary": ["stem packing", "lockout tagout", "F31"]
+    }
+  ],
+  "maintenance_history": [
+    {
+      "equipment_code": "PMP-204B",
+      "date": "2026-05-18",
+      "action": "Replaced mechanical seal and verified bearing temperature under load",
+      "notes": "Returned to service after two-hour observation window."
+    },
+    {
+      "equipment_code": "PMP-204B",
+      "date": "2026-04-29",
+      "action": "Coolant line flush",
+      "notes": "Minor debris found in strainer."
+    },
+    {
+      "equipment_code": "CMP-118A",
+      "date": "2026-05-09",
+      "action": "Changed intake filter AF-118",
+      "notes": "Pressure recovered to nominal range."
+    },
+    {
+      "equipment_code": "VLV-77C",
+      "date": "2026-05-22",
+      "action": "Adjusted stem packing",
+      "notes": "No visible steam leak after retest."
+    }
+  ],
+  "procedures": [
+    {
+      "name": "PMP-204B high bearing temperature response",
+      "equipment_code": "PMP-204B",
+      "steps": [
+        "Reduce pump load if process conditions allow.",
+        "Verify coolant flow and strainer condition.",
+        "Check bearing temperature against the 82 C limit.",
+        "Escalate immediately if temperature keeps rising for five minutes."
+      ]
+    },
+    {
+      "name": "CMP-118A filter replacement",
+      "equipment_code": "CMP-118A",
+      "steps": [
+        "Isolate compressor and confirm zero stored pressure.",
+        "Remove intake housing cover.",
+        "Replace filter AF-118 and inspect seal.",
+        "Restart and verify pressure recovery."
+      ]
+    },
+    {
+      "name": "VLV-77C lockout inspection",
+      "equipment_code": "VLV-77C",
+      "steps": [
+        "Confirm upstream and downstream isolation.",
+        "Apply lockout tagout according to plant procedure.",
+        "Inspect stem packing for steam leakage.",
+        "Record torque reading after adjustment."
+      ]
+    }
+  ]
+}

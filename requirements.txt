@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+pytest
+httpx
+
+# Optional production STT engine. Install when you want backend Whisper STT:
+# faster-whisper

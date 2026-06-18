@@ -10,7 +10,12 @@
         "bearing_temp_limit_c": 82,
         "seal_kit": "SK-PMP-204"
       },
-      "vocabulary": ["bearing temperature", "seal kit", "F12", "coolant flush"]
+      "vocabulary": [
+        "bearing temperature",
+        "seal kit",
+        "F12",
+        "coolant flush"
+      ]
     },
     {
       "code": "CMP-118A",
@@ -21,7 +26,12 @@
         "oil_grade": "ISO VG 46",
         "filter_part": "AF-118"
       },
-      "vocabulary": ["intake filter", "pressure drop", "oil carryover", "F07"]
+      "vocabulary": [
+        "intake filter",
+        "pressure drop",
+        "oil carryover",
+        "F07"
+      ]
     },
     {
       "code": "VLV-77C",
@@ -32,7 +42,11 @@
         "diameter_mm": 150,
         "torque_nm": 260
       },
-      "vocabulary": ["stem packing", "lockout tagout", "F31"]
+      "vocabulary": [
+        "stem packing",
+        "lockout tagout",
+        "F31"
+      ]
     }
   ],
   "maintenance_history": [

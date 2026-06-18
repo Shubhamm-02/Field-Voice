@@ -37,20 +37,10 @@ els.workOrders.addEventListener("click", async (event) => {
   await closeWorkOrder(button.dataset.closeOrder);
 });
 
-document
-  .querySelector("#sendInspection")
-  .addEventListener("click", () => submitVoice("create_work_order"));
-document
-  .querySelector("#askQuestion")
-  .addEventListener("click", () => submitVoice("query"));
-document
-  .querySelector("#escalate")
-  .addEventListener("click", () =>
-    submitVoice("escalate", "Escalate this fault to supervisor."),
-  );
-document
-  .querySelector("#syncQueue")
-  .addEventListener("click", handleNetworkSync);
+document.querySelector("#sendInspection").addEventListener("click", () => submitVoice("create_work_order"));
+document.querySelector("#askQuestion").addEventListener("click", () => submitVoice("query"));
+document.querySelector("#escalate").addEventListener("click", () => submitVoice("escalate", "Escalate this fault to supervisor."));
+document.querySelector("#syncQueue").addEventListener("click", handleNetworkSync);
 document.querySelector("#refresh").addEventListener("click", refreshAll);
 
 bindPushToTalk();
@@ -73,8 +63,7 @@ async function submitVoice(commandMode, overrideTranscript) {
     state.queue.push(payload);
     persistQueue();
     noteActivity("QUEUED_OFFLINE", `Queued ${commandMode} while offline`);
-    els.confirmation.textContent =
-      "Offline mode: command queued and ready to sync.";
+    els.confirmation.textContent = "Offline mode: command queued and ready to sync.";
     return;
   }
 
@@ -121,8 +110,7 @@ async function handleNetworkSync() {
   }
   state.offline = true;
   updateNetworkControls();
-  els.confirmation.textContent =
-    "Offline mode enabled. New commands will be queued.";
+  els.confirmation.textContent = "Offline mode enabled. New commands will be queued.";
 }
 
 async function initializeVoiceStack() {
@@ -140,9 +128,7 @@ async function initializeAIStatus() {
   try {
     const response = await fetch("/api/ai/status");
     const status = await response.json();
-    els.aiStatus.textContent = status.available
-      ? `OpenAI ${status.model}`
-      : "OpenAI fallback";
+    els.aiStatus.textContent = status.available ? `OpenAI ${status.model}` : "OpenAI fallback";
   } catch {
     els.aiStatus.textContent = "OpenAI fallback";
   }
@@ -157,8 +143,7 @@ function updateSpeechStatus() {
 }
 
 function setupBrowserVoiceCapture() {
-  const Recognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const button = document.querySelector("#voiceCapture");
   if (!Recognition && !canRecordForBackend()) {
     button.disabled = true;
@@ -191,8 +176,7 @@ function setupBrowserVoiceCapture() {
     state.listening = false;
     state.lockedRecording = false;
     setVoiceButtonIdle();
-    els.confirmation.textContent =
-      "Voice capture stopped. You can still type or paste the transcript.";
+    els.confirmation.textContent = "Voice capture stopped. You can still type or paste the transcript.";
   };
   state.recognition = recognition;
 }
@@ -209,10 +193,7 @@ function bindPushToTalk() {
     }
   });
   button.addEventListener("keydown", (event) => {
-    if (
-      (event.code === "Space" || event.code === "Enter") &&
-      !state.listening
-    ) {
+    if ((event.code === "Space" || event.code === "Enter") && !state.listening) {
       startPushToTalk(event);
     }
   });
@@ -239,8 +220,7 @@ function stopPushToTalk(event) {
   const pressDuration = Date.now() - state.pressStartedAt;
   if (state.listening && pressDuration < 240) {
     state.lockedRecording = true;
-    els.confirmation.textContent =
-      "Recording locked on. Tap the mic again when done.";
+    els.confirmation.textContent = "Recording locked on. Tap the mic again when done.";
     updateStopControl();
     return;
   }
@@ -273,8 +253,7 @@ function startCapture() {
 
 function startBrowserRecording() {
   if (!state.recognition) {
-    els.confirmation.textContent =
-      "Voice capture is unavailable in this browser.";
+    els.confirmation.textContent = "Voice capture is unavailable in this browser.";
     return;
   }
   const button = document.querySelector("#voiceCapture");
@@ -283,11 +262,9 @@ function startBrowserRecording() {
     state.listening = true;
     button.classList.add("is-recording");
     updateVoiceControlState();
-    els.confirmation.textContent =
-      "Listening with browser STT. Release when done.";
+    els.confirmation.textContent = "Listening with browser STT. Release when done.";
   } catch {
-    els.confirmation.textContent =
-      "Voice capture is already starting. Try again in a moment.";
+    els.confirmation.textContent = "Voice capture is already starting. Try again in a moment.";
   }
 }
 
@@ -302,10 +279,7 @@ async function startBackendRecording() {
       },
     });
     state.audioChunks = [];
-    state.mediaRecorder = new MediaRecorder(
-      state.mediaStream,
-      mediaRecorderOptions(),
-    );
+    state.mediaRecorder = new MediaRecorder(state.mediaStream, mediaRecorderOptions());
     state.mediaRecorder.ondataavailable = (event) => {
       if (event.data.size > 0) {
         state.audioChunks.push(event.data);
@@ -316,8 +290,7 @@ async function startBackendRecording() {
     state.listening = true;
     button.classList.add("is-recording");
     updateVoiceControlState();
-    els.confirmation.textContent =
-      "Recording for backend STT. Release when done.";
+    els.confirmation.textContent = "Recording for backend STT. Release when done.";
   } catch {
     startBrowserRecording();
   }
@@ -325,9 +298,7 @@ async function startBackendRecording() {
 
 function mediaRecorderOptions() {
   const preferred = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"];
-  const mimeType = preferred.find((type) =>
-    MediaRecorder.isTypeSupported(type),
-  );
+  const mimeType = preferred.find((type) => MediaRecorder.isTypeSupported(type));
   return mimeType ? { mimeType } : {};
 }
 
@@ -337,13 +308,10 @@ function canRecordForBackend() {
 
 async function transcribeRecordedAudio() {
   stopMediaTracks();
-  const blob = new Blob(state.audioChunks, {
-    type: state.mediaRecorder?.mimeType || "audio/webm",
-  });
+  const blob = new Blob(state.audioChunks, { type: state.mediaRecorder?.mimeType || "audio/webm" });
   state.audioChunks = [];
   if (!blob.size) {
-    els.confirmation.textContent =
-      "No audio captured. Hold the button while speaking.";
+    els.confirmation.textContent = "No audio captured. Hold the button while speaking.";
     return;
   }
   els.confirmation.textContent = "Transcribing field audio...";
@@ -359,13 +327,10 @@ async function transcribeRecordedAudio() {
       els.voiceText.value = cleanTranscript(result.transcript);
       els.confirmation.textContent = `Transcript ready via ${result.engine}.`;
     } else {
-      els.confirmation.textContent =
-        result.message ||
-        "Backend STT unavailable. Use browser voice or type the transcript.";
+      els.confirmation.textContent = result.message || "Backend STT unavailable. Use browser voice or type the transcript.";
     }
   } catch {
-    els.confirmation.textContent =
-      "Backend transcription failed. Use browser voice or type the transcript.";
+    els.confirmation.textContent = "Backend transcription failed. Use browser voice or type the transcript.";
   }
 }
 
@@ -409,14 +374,12 @@ async function speakWithBackend(text) {
       state.speaking = false;
       state.audioPlayer = null;
       updateStopControl();
-      els.confirmation.textContent =
-        "Server audio could not play here, using browser voice instead.";
+      els.confirmation.textContent = "Server audio could not play here, using browser voice instead.";
       speakWithBrowser(text);
     };
     await audio.play();
   } catch {
-    els.confirmation.textContent =
-      "Audio playback was blocked, using browser voice instead.";
+    els.confirmation.textContent = "Audio playback was blocked, using browser voice instead.";
     speakWithBrowser(text);
   }
 }
@@ -507,14 +470,9 @@ function updateVoiceControlState() {
   const button = document.querySelector("#voiceCapture");
   if (state.listening) {
     button.setAttribute("aria-label", "Stop recording");
-    button.dataset.tooltip = state.lockedRecording
-      ? "Tap to stop recording"
-      : "Release to stop recording";
+    button.dataset.tooltip = state.lockedRecording ? "Tap to stop recording" : "Release to stop recording";
   } else {
-    button.setAttribute(
-      "aria-label",
-      "Hold to talk or press to turn recording on",
-    );
+    button.setAttribute("aria-label", "Hold to talk or press to turn recording on");
     button.dataset.tooltip = "Hold to talk or press to turn recording on";
   }
 }
@@ -546,9 +504,7 @@ async function refreshAll() {
 }
 
 function renderOrders(orders) {
-  els.workOrders.innerHTML = orders
-    .map(
-      (order) => `
+  els.workOrders.innerHTML = orders.map((order) => `
     <article class="work-card">
       <div class="work-card-head">
         <div>
@@ -564,9 +520,7 @@ function renderOrders(orders) {
       <p class="work-transcript">${escapeHtml(order.transcript).slice(0, 190)}</p>
       <div class="work-card-actions">${renderCloseAction(order)}</div>
     </article>
-  `,
-    )
-    .join("");
+  `).join("");
 }
 
 function renderCloseAction(order) {
@@ -616,11 +570,7 @@ function connectEvents() {
   });
   socket.addEventListener("message", (event) => {
     const message = JSON.parse(event.data);
-    const summary =
-      message.payload?.spoken_confirmation ||
-      message.payload?.message ||
-      message.payload?.equipment_code ||
-      "";
+    const summary = message.payload?.spoken_confirmation || message.payload?.message || message.payload?.equipment_code || "";
     noteActivity(message.type, summary);
     refreshAll();
   });
@@ -661,16 +611,12 @@ function updateQueueCount() {
 function updateNetworkControls() {
   const syncButton = document.querySelector("#syncQueue");
   if (state.offline) {
-    syncButton.textContent = state.queue.length
-      ? "Go online & sync"
-      : "Go online";
+    syncButton.textContent = state.queue.length ? "Go online & sync" : "Go online";
     els.socketStatus.textContent = "Offline";
     els.socketStatus.classList.add("offline");
     return;
   }
-  syncButton.textContent = state.queue.length
-    ? `Sync ${state.queue.length}`
-    : "Go offline";
+  syncButton.textContent = state.queue.length ? `Sync ${state.queue.length}` : "Go offline";
   if (els.socketStatus.textContent !== "Live") {
     els.socketStatus.textContent = "Online";
   }

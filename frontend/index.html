@@ -5,6 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FieldVoice Supervisor</title>
+    <meta name="description" content="Hands-free voice assistant for field workers." />
+    <meta name="theme-color" content="#f97316" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="FieldVoice" />
     <link rel="stylesheet" href="/static/styles.css?v=openai-1" />
   </head>
   <body>
@@ -77,5 +84,14 @@
       </section>
     </main>
     <script src="/static/app.js?v=openai-1"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/sw.js").catch((err) => {
+            console.warn("Service worker registration failed:", err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>

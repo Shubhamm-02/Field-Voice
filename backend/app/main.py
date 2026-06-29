@@ -70,6 +70,24 @@ async def index() -> FileResponse:
     return FileResponse(FRONTEND_DIR / "index.html")
 
 
+@app.get("/manifest.webmanifest", include_in_schema=False)
+async def manifest() -> FileResponse:
+    return FileResponse(
+        FRONTEND_DIR / "manifest.webmanifest",
+        media_type="application/manifest+json",
+    )
+
+
+@app.get("/sw.js", include_in_schema=False)
+async def service_worker() -> FileResponse:
+    # Served from the root so the worker's scope covers the whole app.
+    return FileResponse(
+        FRONTEND_DIR / "sw.js",
+        media_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/", "Cache-Control": "no-cache"},
+    )
+
+
 @app.get("/api/health")
 async def health() -> dict[str, str]:
     return {
